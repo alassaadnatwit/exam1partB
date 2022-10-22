@@ -1,0 +1,64 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
+#include <signal.h>
+
+enum {CHAR_SIZE = 256};
+int i;
+char term[CHAR_SIZE];                
+char *argv[16];            
+void convert(); 
+
+                                                                        
+int main(){                         
+
+    while(1){//terminal
+        
+        
+    printf("$ ");// print $
+    fgets(term, CHAR_SIZE, stdin); //lets it remove the spam of $
+    
+    if ((strlen(term) > 0) && (term[strlen (term) - 1] == '\n')){
+            term[strlen (term) - 1] = '\0';
+    
+}
+        if(!strcmp("", term)) continue;
+        if(!strcmp("exit", term)) break; //if the user inputs exit terminal will close
+        
+        convert(); //allows the argv to be made for the system calls   
+
+        
+       pid_t pid = fork();
+        if(-1 == pid){
+            printf("Child could not be created");// if it fails
+        }
+        else if(0 == pid){
+            
+            execvp(argv[0], argv);//if it works
+        }
+        else{
+            
+            if(NULL == argv[i]) waitpid(pid, NULL, 0);//nothing was created 
+        }
+    }
+
+    return 0;
+}
+
+
+void convert(){ 
+    
+    char *ptr;
+   i = 0;
+    ptr = strtok(term, " ");
+    while(ptr != NULL){
+        
+        argv[i] = ptr;
+        i++;
+        ptr = strtok(NULL, " ");
+    } 
+}
+
